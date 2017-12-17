@@ -27,6 +27,7 @@
     <Compile Include="fullscroll.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AutoSoc.bat" />
     <Content Include="AutoSoc.ini" />
     <Content Include="chromedriver.exe" />
     <Content Include="Credentials.txt" />

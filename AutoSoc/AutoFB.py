@@ -24,7 +24,12 @@ def ReactElement(driver, element, react, reacthoverwait):
 	# get element of correct reaction and perform
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	reactbutton = None
-	toolbarpar = driver.find_element_by_css_selector('div[class="_1oxj uiLayer"]')
+	toolbarparlist = driver.find_elements_by_css_selector('div[aria-label="Reactions"]')
+	toolbarpar = None
+	for a in range(len(toolbarparlist)):
+		if toolbarparlist[a].is_displayed():
+			toolbarpar = toolbarparlist[a]
+			break
 	if react == 'like':
 		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Like"]')
 	elif react == 'angry':

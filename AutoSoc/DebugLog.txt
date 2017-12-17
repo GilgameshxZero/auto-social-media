@@ -1,35 +1,11 @@
-2017-12-16 19:06:52,587 - INFO: running components
-2017-12-16 19:06:52,590 - INFO: running fb
-2017-12-16 19:06:52,592 - INFO: logging in
-2017-12-16 19:07:03,214 - SUCCESS: login success
-2017-12-16 19:07:03,215 - INFO: reacting feed for a max of 0 reacts
-2017-12-16 19:07:03,226 - INFO: finished reacting from the feed
-2017-12-16 19:07:03,228 - INFO: getting friend profile links
-2017-12-16 19:07:03,229 - INFO: found 1 friends from optional file
-2017-12-16 19:07:03,231 - INFO: reacting friend wall posts
-2017-12-16 19:07:09,302 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 1 reacts
-2017-12-16 19:07:16,067 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 2 reacts
-2017-12-16 19:07:23,386 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 3 reacts
-2017-12-16 19:07:30,167 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 4 reacts
-2017-12-16 19:07:40,754 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 5 reacts
-2017-12-16 19:07:47,591 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 6 reacts
-2017-12-16 19:07:54,409 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 7 reacts
-2017-12-16 19:08:01,244 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 8 reacts
-2017-12-16 19:08:08,640 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 9 reacts
-2017-12-16 19:08:17,156 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 10 reacts
-2017-12-16 19:08:24,015 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 11 reacts
-2017-12-16 19:08:30,921 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 12 reacts
-2017-12-16 19:08:39,616 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 13 reacts
-2017-12-16 19:08:46,544 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 14 reacts
-2017-12-16 19:08:53,453 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 15 reacts
-2017-12-16 19:09:00,486 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 16 reacts
-2017-12-16 19:09:10,353 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 17 reacts
-2017-12-16 19:09:17,325 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 18 reacts
-2017-12-16 19:09:24,299 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 19 reacts
-2017-12-16 19:09:31,367 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 20 reacts
-2017-12-16 19:09:38,390 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 21 reacts
-2017-12-16 19:09:45,406 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 22 reacts
-2017-12-16 19:09:53,047 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 23 reacts
-2017-12-16 19:10:00,086 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 24 reacts
-2017-12-16 19:10:07,126 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 25 reacts
-2017-12-16 19:10:14,198 - SUCCESS: Yang Yan <span class="alternate_name">(Gilbert)</span>: 26 reacts
+2017-12-16 19:35:11,157 - INFO: running components
+2017-12-16 19:35:11,158 - INFO: running fb
+2017-12-16 19:35:11,160 - INFO: logging in
+2017-12-16 19:35:23,264 - SUCCESS: login success
+2017-12-16 19:35:23,265 - INFO: reacting feed for a max of 100 reacts
+2017-12-16 19:35:26,198 - SUCCESS: 1 reacts
+2017-12-16 19:35:33,001 - SUCCESS: 2 reacts
+2017-12-16 19:35:40,855 - SUCCESS: 3 reacts
+2017-12-16 19:35:47,688 - SUCCESS: 4 reacts
+2017-12-16 19:35:54,558 - SUCCESS: 5 reacts
+2017-12-16 19:36:01,440 - SUCCESS: 6 reacts
