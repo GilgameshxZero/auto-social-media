@@ -6,135 +6,136 @@ import selenium
 import time
 import fullscroll as fs
 import logging
+
+def ReactElement(driver, element, react, reacthoverwait):
+	# scroll to element and hover
+	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
+	actions.move_to_element(element)
+	actions.perform()
+
+	driver.execute_script('arguments[0].scrollIntoView(false);', element)
+	driver.execute_script('window.scrollBy(0, window.innerHeight / 2);')
+	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
+	actions.move_to_element(element)
+	actions.perform()
+
+	time.sleep(float(reacthoverwait))
+
+	# get element of correct reaction and perform
+	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
+	reactbutton = None
+	toolbarpar = driver.find_element_by_css_selector('div[class="_1oxj uiLayer"]')
+	if react == 'like':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Like"]')
+	elif react == 'angry':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Angry"]')
+	elif react == 'love':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Love"]')
+	elif react == 'sad':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Sad"]')
+	elif react == 'haha':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Haha"]')
+	elif react == 'wow':
+		reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Wow"]')
+	actions.click(reactbutton)
+	actions.perform()
 		
 # autolike fb posts based on parameters
 def AutoFB (params, logger):
 	# inititialize parameters
-	logger.info('INFO: reading fb parameters')
-	loadtime = int(params['fb-pageloadwait'])
-	scrollwait = int(params['fb-scrollwait'])
-	wallsclim = int(params['fb-wallscrolllim'])
-	likecd = int(params['fb-reactcooldown'])
-	likelim = int(params['fb-friendreactlim'])
+	pageloadwait = float(params['fb-pageloadwait'])
+	scrollwait = float(params['fb-scrollwait'])
+	reactcooldown = float(params['fb-reactcooldown'])
 	frlinks = []
 	if params['fb-friendprofiles'] != 'All':
 		f = open(params['fb-friendprofiles'], 'r')
-		for a in range(int(params['fb-fileprofilecnt'])):
-			frlinks.append(f.readline().strip())
+		for a in f:
+			frlinks.append('https://www.facebook.com/' + a.strip())
 		f.close()
-	logger.info('SUCCESS: fb parameters read success')
 
 	# start driver and login to fb
-	logger.info('INFO: logging into fb')
+	logger.info('INFO: logging in')
+
 	chrome_options = Options()
 	chrome_options.add_argument("--disable-notifications")
 	driver = webdriver.Chrome(params['chromedrloc'], chrome_options=chrome_options)
-
 	driver.get('https://www.facebook.com/login.php')
-	time.sleep(loadtime)
+	time.sleep(pageloadwait)
 	driver.find_element_by_id('email').send_keys(params['fb-username'])
 	driver.find_element_by_id('pass').send_keys(params['fb-password'])
-	time.sleep(loadtime)
 	driver.find_element_by_id('loginbutton').click()
-	time.sleep(loadtime)
-	logger.info('SUCCESS: fb login success')
+	time.sleep(pageloadwait)
 
-	if params['fb-mode'] == 'feed':
-		# like at most fb-feedreactlim posts from the feed
-		logger.info('INFO: liking feed posts; MAX: ' + params['fb-feedreactlim'])
-		fs.FullScroll(driver, pausetime=scrollwait, limit=int(params['fb-feedscrolllim']))
-		likebuttons = driver.find_elements_by_css_selector('a[data-testid="fb-ufi-likelink"]')
-		
-		actuallikes = 0
-		for a in range(len(likebuttons)):
-			if actuallikes >= int(params['fb-feedreactlim']):
-				break
-			if likebuttons[a].get_attribute('data-testid') == 'fb-ufi-likelink': # sometimes videos have two like buttons, but don't want to doubleclick
-				driver.execute_script('arguments[0].click()', likebuttons[a])
-				actuallikes += 1
-				logger.info('INFO: ' + str(actuallikes) + ' of ' + str(len(likebuttons) - a + actuallikes - 1) + ' reacts')
-				time.sleep(likecd)
-		logger.info('SUCCESS: finished: ' + str(actuallikes) + ' reacts total')
-	elif params['fb-mode'] == 'friend':
-		# get all links to friend profiles
-		logger.info('INFO: getting friend profile links')
-		if params['fb-friendprofiles'] == 'All':
-			driver.get('https://www.facebook.com/me')
-			friendsurl = driver.find_element_by_css_selector('a[data-tab-key="friends"]').get_attribute('href')
-			time.sleep(loadtime)
-			driver.get(friendsurl)
-			time.sleep(loadtime)
+	logger.info('SUCCESS: login success')
 
-			fs.FullScroll(driver, pausetime=scrollwait)
-			friends = driver.find_elements_by_css_selector('a[class="_5q6s _8o _8t lfloat _ohe"]')
-			for a in range(len(friends)):
-				frlinks.append(friends[a].get_attribute('href'))
-			logger.info('SUCCESS: found ' + str(len(frlinks)) + ' friends in friends list')
-		else:
-			logger.info('SUCCESS: found ' + str(len(frlinks)) + ' friends in optional file file')
+	# react posts from the feed
+	logger.info('INFO: reacting feed for a max of ' + params['fb-feedreactlimit'] + ' reacts')
+
+	reacts = 0
+	curheight = 0
+	windowheight = driver.execute_script('return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight')
+	while reacts < int(params['fb-feedreactlimit']):
+		driver.execute_script('window.scrollTo(0, arguments[0]);', curheight)
+		time.sleep(scrollwait)
+		curheight += windowheight
+
+		buttons = driver.find_elements_by_css_selector('a[data-testid="fb-ufi-likelink"]')
+		for a in range(len(buttons)):
+			if buttons[a].is_displayed():
+				ReactElement(driver, buttons[a], params['fb-react'], params['fb-reacthoverwait'])
+				reacts += 1
+				logger.info('SUCCESS: ' + str(reacts) + ' reacts')
+				time.sleep(reactcooldown)
+
+	logger.info('INFO: finished reacting from the feed')
 	
-		# like posts
-		logger.info('INFO: reacting posts')
-		totallikes = 0
-		flag = False
-		for a in range(len(frlinks)):
-			driver.get(frlinks[a])
-			time.sleep(loadtime)
+	# get links to friend profiles
+	logger.info('INFO: getting friend profile links')
 
-			name = driver.find_element_by_css_selector('a[class="_2nlw _2nlv"]').get_attribute('innerHTML')
+	if params['fb-friendprofiles'] == 'All':
+		driver.get('https://www.facebook.com/me')
+		friendsurl = driver.find_element_by_css_selector('a[data-tab-key="friends"]').get_attribute('href')
+		time.sleep(pageloadwait)
+		driver.get(friendsurl)
+		time.sleep(pageloadwait)
 
-			fs.FullScroll(driver, pausetime=scrollwait, limit=wallsclim)
+		fs.FullScroll(driver, pausetime=scrollwait)
+		friends = driver.find_elements_by_css_selector('div[class="uiProfileBlockContent"]')
+		for a in range(len(friends)):
+			frlinks.append(friends[a].find_element_by_tag_name('a').get_attribute('href'))
+		logger.info('INFO: found ' + str(len(frlinks)) + ' friends from friends list')
+	else:
+		logger.info('INFO: found ' + str(len(frlinks)) + ' friends from optional file')
+	
+	# react posts from friend walls
+	logger.info('INFO: reacting friend wall posts')
 
-			# get all like buttons regardless if pressed
-			likebuttons = driver.find_elements_by_css_selector('a[data-testid="fb-ufi-likelink"]')
-			likebuttons.extend(driver.find_elements_by_css_selector('a[data-testid="fb-ufi-unlikelink"]'))
+	totalreacts = 0
+	for a in range(len(frlinks)):
+		driver.get(frlinks[a])
+		time.sleep(pageloadwait)
+		name = driver.find_element_by_id('fb-timeline-cover-name').find_element_by_tag_name('a').get_attribute('innerHTML')
 
-			personlikes = 0
+		reacts = 0
+		curheight = 0
+		windowheight = driver.execute_script('return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight')
+		while reacts < int(params['fb-friendreactlimit']):
+			driver.execute_script('window.scrollTo(0, arguments[0]);', curheight)
+			time.sleep(scrollwait)
+			curheight += windowheight
 
-			for b in range(len(likebuttons)):
-				if likelim != 0 and personlikes >= likelim:
-					break
+			buttons = driver.find_elements_by_css_selector('a[data-testid="fb-ufi-likelink"]')
+			for a in range(len(buttons)):
+				if buttons[a].is_displayed():
+					ReactElement(driver, buttons[a], params['fb-react'], params['fb-reacthoverwait'])
+					reacts += 1
+					logger.info('SUCCESS: ' + name + ': ' + str(reacts) + ' reacts')
+					time.sleep(reactcooldown)
 
-				# scroll to element and hover
-				actions = selenium.webdriver.common.action_chains.ActionChains(driver)
-				actions.move_to_element(likebuttons[b])
-				actions.perform()
+		totalreacts += reacts
 
-				driver.execute_script('arguments[0].scrollIntoView(false);', likebuttons[b])
-				driver.execute_script('window.scrollBy(0, window.innerHeight / 2);')
-				actions = selenium.webdriver.common.action_chains.ActionChains(driver)
-				actions.move_to_element(likebuttons[b])
-				actions.perform()
-
-				time.sleep(float(params['fb-reacthoverwait']))
-
-				# get element of correct reaction and perform
-				actions = selenium.webdriver.common.action_chains.ActionChains(driver)
-				reactbutton = None
-				toolbarpar = driver.find_element_by_css_selector('div[class="_1oxj uiLayer"]')
-				if params['fb-react'] == 'like':
-					reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Like"]')
-				elif params['fb-react'] == 'angry':
-					reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Angry"]')
-				elif params['fb-react'] == 'love':
-					reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Love"]')
-				elif params['fb-react'] == 'sad':
-					reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Sad"]')
-				elif params['fb-react'] == 'haha':
-					reactbutton = toolbarpar.find_element_by_css_selector('span[aria-label="Haha"]')
-				actions.click(reactbutton)
-				actions.perform()
-
-				# logging
-				personlikes += 1
-				logger.info('INFO: ' + str(a) + ': ' + name + ': ' + str(personlikes) + ' of ' + str(len(likebuttons) - b + personlikes - 1) + ' reacts')
-
-				# logistics
-				time.sleep(likecd)
-
-			totallikes += personlikes
-		logger.info('SUCCESS: finished: ' + str(totallikes) + ' reacts total')
+	logger.info('SUCCESS: finished: ' + str(totalreacts) + ' reacts total')
 
 	# clean up
-	driver.get('https://www.facebook.com/me') # to give window time to close
+	driver.get('https://www.facebook.com/me') # give window time to close
 	driver.close()

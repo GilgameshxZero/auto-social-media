@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>231562f9-88af-4652-97b2-bcac906ce1a7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>AutoSoc.py</StartupFile>
+    <StartupFile>autosoc.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AutoSoc.py" />
+    <Compile Include="autofb.py" />
+    <Compile Include="autoinsta.py" />
+    <Compile Include="autosoc.py" />
+    <Compile Include="fullscroll.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AutoSoc.ini" />
+    <Content Include="chromedriver.exe" />
+    <Content Include="Credentials.txt" />
+    <Content Include="cxfreeze" />
+    <Content Include="FB_Friends.txt" />
+    <Content Include="DebugLog.txt" />
+    <Content Include="readme.txt" />
+    <Content Include="[Sample]Credentials.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

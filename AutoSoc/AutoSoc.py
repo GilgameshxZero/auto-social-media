@@ -24,7 +24,6 @@ def AutoSoc (config):
 	except FileNotFoundError:
 		input('ERROR: ' + params['credentials'] + ' configuration file not found')
 		return
-	params = {}
 	for line in f:
 		if len(line.strip()) == 0:
 			continue;
@@ -37,7 +36,7 @@ def AutoSoc (config):
 	# set up logging
 	logger = logging.getLogger('log')
 	logger.setLevel(logging.DEBUG)
-	file_log_handler = logging.FileHandler(params['logfile'])
+	file_log_handler = logging.FileHandler(params['logfile'], mode='w')
 	stream_log_handler = logging.StreamHandler()
 	file_log_handler.setLevel(logging.DEBUG)
 	stream_log_handler.setLevel(logging.DEBUG)
@@ -53,10 +52,9 @@ def AutoSoc (config):
 			  'insta':autoinsta.AutoInsta}
 	for key in component:
 		if key in params['component']:
-			logger.info('INFO: running ' + key + ' component')
+			logger.info('INFO: running ' + key)
 			component[key](params, logger)
-			logger.info('SUCCESS: finished ' + key + ' component')
+			logger.info('SUCCESS: finished ' + key)
 	logger.info('SUCCESS: finished')
-	logger.info('--------')
 
 AutoSoc('AutoSoc.ini')
