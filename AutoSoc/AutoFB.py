@@ -9,12 +9,8 @@ import logging
 
 def ReactElement(driver, element, react, reacthoverwait):
 	# scroll to element and hover
-	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
-	actions.move_to_element(element)
-	actions.perform()
-
 	driver.execute_script('arguments[0].scrollIntoView(false);', element)
-	driver.execute_script('window.scrollBy(0, window.innerHeight / 2);')
+	driver.execute_script('window.scrollBy(0, 50);')
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	actions.move_to_element(element)
 	actions.perform()

@@ -1,3 +1,5 @@
 Credentials.txt
 *.suo
 *.pyc
+DebugLog.txt
+debug.log
