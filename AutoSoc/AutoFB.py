@@ -25,7 +25,7 @@ def ReactElement(driver, element, react, reacthoverwait):
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	reactbutton = None
 	toolbarparlist = driver.find_elements_by_css_selector('div[aria-label="Reactions"]')
-	toolbarpar = None
+	toolbarpar = toolbarparlist[-1]
 	for a in range(len(toolbarparlist)):
 		if toolbarparlist[a].is_displayed():
 			toolbarpar = toolbarparlist[a]
