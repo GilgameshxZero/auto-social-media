@@ -1,7 +1,7 @@
 .vs
 
-Credentials.txt
-*.suo
-*.pyc
+AutoSoc/Credentials.txt
 AutoSoc/DebugLog.txt
 AutoSoc/debug.log
+*.suo
+*.pyc
