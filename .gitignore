@@ -3,5 +3,5 @@
 Credentials.txt
 *.suo
 *.pyc
-DebugLog.txt
-debug.log
+AutoSoc/DebugLog.txt
+AutoSoc/debug.log
