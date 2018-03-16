@@ -1,7 +1,7 @@
-2017-12-18 19:33:44,132 - INFO: running components
-2017-12-18 19:33:44,133 - INFO: running fb
-2017-12-18 19:33:44,135 - INFO: logging in
-2017-12-18 19:33:55,206 - SUCCESS: login success
-2017-12-18 19:33:55,208 - INFO: reacting feed for a max of 20 reacts
-2017-12-18 19:33:57,991 - SUCCESS: 1 reacts
-2017-12-18 19:34:09,784 - SUCCESS: 2 reacts
+2018-03-16 12:00:43,006 - INFO: running components
+2018-03-16 12:00:43,008 - INFO: running fb
+2018-03-16 12:00:43,011 - INFO: logging in
+2018-03-16 12:00:56,670 - SUCCESS: login success
+2018-03-16 12:00:56,675 - INFO: reacting feed for a max of 20 reacts
+2018-03-16 12:01:00,104 - SUCCESS: 1 reacts
+2018-03-16 12:01:05,026 - SUCCESS: 2 reacts

@@ -17,6 +17,8 @@ def AutoInsta (params, logger):
 
 	chrome_options = Options()
 	chrome_options.add_argument("--disable-notifications")
+	if params['hideBrowser'] == 'yes':
+		chrome_options.add_argument('--headless')
 	driver = webdriver.Chrome(params['chromedrloc'], chrome_options=chrome_options)
 
 	driver.get('https://www.instagram.com/')
@@ -50,6 +52,9 @@ def AutoInsta (params, logger):
 
 		for a in range(len(hearts)):
 			if hearts[a].is_displayed():
+				# scroll element into the middle of page
+				driver.execute_script('window.scrollBy(0, arguments[0]);', driver.execute_script('return arguments[0].getBoundingClientRect().top;', hearts[a]) - windowheight / 2)
+
 				hearts[a].click()
 				totalhearts += 1
 				logger.info('SUCCESS: ' + str(totalhearts) + ' hearts')

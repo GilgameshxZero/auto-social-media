@@ -10,7 +10,9 @@ import logging
 def ReactElement(driver, element, react, reacthoverwait):
 	# scroll to element and hover
 	driver.execute_script('arguments[0].scrollIntoView(false);', element)
-	driver.execute_script('window.scrollBy(0, 50);')
+
+	# scroll the element to the middle of page
+	driver.execute_script('window.scrollBy(0, window.innerHeight / 2);')
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	actions.move_to_element(element)
 	actions.perform()
@@ -58,7 +60,9 @@ def AutoFB (params, logger):
 	logger.info('INFO: logging in')
 
 	chrome_options = Options()
-	chrome_options.add_argument("--disable-notifications")
+	chrome_options.add_argument('--disable-notifications')
+	if params['hideBrowser'] == 'yes':
+		chrome_options.add_argument('--headless')
 	driver = webdriver.Chrome(params['chromedrloc'], chrome_options=chrome_options)
 	driver.get('https://www.facebook.com/login.php')
 	time.sleep(pageloadwait)

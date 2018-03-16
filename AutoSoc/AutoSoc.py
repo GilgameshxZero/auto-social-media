@@ -57,4 +57,4 @@ def AutoSoc (config):
 			logger.info('SUCCESS: finished ' + key)
 	logger.info('SUCCESS: finished')
 
-AutoSoc('AutoSoc.ini')
+AutoSoc('config.ini')

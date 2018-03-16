@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoSoc.bat" />
-    <Content Include="AutoSoc.ini" />
+    <Content Include="config.ini" />
     <Content Include="chromedriver.exe" />
     <Content Include="Credentials.txt" />
     <Content Include="cxfreeze" />
