@@ -8,7 +8,7 @@ import logging
 
 import rain
 
-def ReactElement(driver, element, react, reacthoverwait):
+def reactFacebookPost(driver, element, react, reacthoverwait):
 	# scroll to element and hover
 	driver.execute_script("arguments[0].scrollIntoView(false);", element)
 
@@ -65,7 +65,7 @@ def manageFacebook (params, logger):
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
 	driver = webdriver.Chrome(params["chromedrloc"], chrome_options=chrome_options)
-	driver.implicitly_wait(0) #blocks for pages to load completely before
+	driver.implicitly_wait(0) #blocks for pages to load
 
 	driver.get("https://www.facebook.com/login.php")
 	driver.find_element_by_id("email").send_keys(params["fb-username"])
@@ -79,16 +79,18 @@ def manageFacebook (params, logger):
 
 	reacts = 0
 	curheight = 0
-	windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
+	windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;")
 	while reacts < int(params["fb-feedreactlimit"]):
 		driver.execute_script("window.scrollTo(0, arguments[0]);", curheight)
-		time.sleep(scrollwait)
 		curheight += windowHeight
+
+		#TODO: better wait
+		time.sleep(scrollwait)
 
 		buttons = driver.find_elements_by_css_selector("a[data-testid=\"fb-ufi-likelink\"]")
 		for a in range(len(buttons)):
 			if buttons[a].is_displayed():
-				ReactElement(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
+				reactFacebookPost(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
 				reacts += 1
 				logger.info("SUCCESS: " + str(reacts) + " reacts")
 				time.sleep(reactcooldown)
@@ -133,7 +135,8 @@ def manageFacebook (params, logger):
 			buttons = driver.find_elements_by_css_selector("a[data-testid=\"fb-ufi-likelink\"]")
 			for a in range(len(buttons)):
 				if buttons[a].is_displayed():
-					ReactElement(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
+					reactFacebookPost(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
+
 					reacts += 1
 					logger.info("SUCCESS: " + name + ": " + str(reacts) + " reacts")
 					time.sleep(reactcooldown)
@@ -157,19 +160,18 @@ def heartInsta (params, logger):
 	logger.info("INFO: logging in")
 
 	chrome_options = Options()
-	chrome_options.add_argument("--disable-notifications")
+	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
 	driver = webdriver.Chrome(params["chromedrloc"], chrome_options=chrome_options)
+	driver.implicitly_wait(0) #blocks for pages to load
 
 	driver.get("https://www.instagram.com/")
-	time.sleep(pageloadwait)
 	driver.find_element_by_link_text("Log in").click()
 	time.sleep(pageloadwait)
 	driver.find_element_by_name("username").send_keys(params["insta-username"])
 	driver.find_element_by_name("password").send_keys(params["insta-password"])
 	driver.find_element_by_xpath("//button[text()=\"Log in\"]").click()
-	time.sleep(pageloadwait)
 
 	logger.info("SUCCESS: login success")
 
