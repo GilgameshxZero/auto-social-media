@@ -11,36 +11,29 @@ import rain
 def reactFacebookPost(driver, element, react, reacthoverwait):
 	# scroll to element and hover
 	driver.execute_script("arguments[0].scrollIntoView(false);", element)
+	time.sleep(2)
 
 	# scroll the element to the middle of page
 	driver.execute_script("window.scrollBy(0, window.innerHeight / 2);")
+	time.sleep(2)
+
+	#hover element
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	actions.move_to_element(element)
 	actions.perform()
-
 	time.sleep(float(reacthoverwait))
 
 	# get element of correct reaction and perform
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
-	reactbutton = None
 	toolbarparlist = driver.find_elements_by_css_selector("div[aria-label=\"Reactions\"]")
 	toolbarpar = toolbarparlist[-1]
 	for a in range(len(toolbarparlist)):
 		if toolbarparlist[a].is_displayed():
 			toolbarpar = toolbarparlist[a]
 			break
-	if react == "like":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Like\"]")
-	elif react == "angry":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Angry\"]")
-	elif react == "love":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Love\"]")
-	elif react == "sad":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Sad\"]")
-	elif react == "haha":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Haha\"]")
-	elif react == "wow":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Wow\"]")
+	
+	ariaLabel = react.capitalize()
+	reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=" + ariaLabel + "]")
 	actions.click(reactbutton)
 	actions.perform()
 		
@@ -52,7 +45,7 @@ def manageFacebook (params, logger):
 	reactcooldown = float(params["fb-reactcooldown"])
 	frlinks = []
 	if params["fb-friendprofiles"] != "All":
-		f = open(params["fb-friendprofiles"], "r")
+		f = open(rain.toRelPath(params["fb-friendprofiles"]), "r")
 		for a in f:
 			frlinks.append("https://www.facebook.com/" + a.strip())
 		f.close()
@@ -64,7 +57,7 @@ def manageFacebook (params, logger):
 	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
-	driver = webdriver.Chrome(params["chromedrloc"], chrome_options=chrome_options)
+	driver = webdriver.Chrome(rain.toRelPath(params["chromedrloc"]), chrome_options=chrome_options)
 	driver.implicitly_wait(0) #blocks for pages to load
 
 	driver.get("https://www.facebook.com/login.php")
@@ -90,7 +83,10 @@ def manageFacebook (params, logger):
 		buttons = driver.find_elements_by_css_selector("a[data-testid=\"fb-ufi-likelink\"]")
 		for a in range(len(buttons)):
 			if buttons[a].is_displayed():
+				#reset scroll so that the element is always beneath us
+				driver.execute_script("window.scrollTo(0, 0);")
 				reactFacebookPost(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
+
 				reacts += 1
 				logger.info("SUCCESS: " + str(reacts) + " reacts")
 				time.sleep(reactcooldown)
@@ -150,7 +146,7 @@ def manageFacebook (params, logger):
 	driver.close()
 
 # autolike instafeM posts based on parameters
-def heartInsta (params, logger):
+def manageInsta (params, logger):
 	# inititialize parameters
 	pageloadwait = float(params["insta-pageloadwait"])
 	scrollwait = float(params["insta-scrollwait"])
@@ -163,7 +159,7 @@ def heartInsta (params, logger):
 	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
-	driver = webdriver.Chrome(params["chromedrloc"], chrome_options=chrome_options)
+	driver = webdriver.Chrome(rain.toRelPath(params["chromedrloc"]), chrome_options=chrome_options)
 	driver.implicitly_wait(0) #blocks for pages to load
 
 	driver.get("https://www.instagram.com/")
