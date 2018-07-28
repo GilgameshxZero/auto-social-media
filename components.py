@@ -180,8 +180,9 @@ def manageInsta (params, logger):
 	windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
 	while nohearts <= int(params["insta-noheartlimit"]):
 		driver.execute_script("window.scrollTo(0, arguments[0]);", curheight)
-		time.sleep(scrollwait)
 		curheight += windowHeight
+		time.sleep(scrollwait)
+
 		hearts = driver.find_elements_by_class_name("coreSpriteHeartOpen")
 
 		if len(hearts) == 0:
@@ -191,6 +192,12 @@ def manageInsta (params, logger):
 
 		for a in range(len(hearts)):
 			if hearts[a].is_displayed():
+				#only if the child element has aria-label "Like"
+				unlikeChilds = hearts[a].find_elements_by_css_selector("span[aria-label=\"Unlike\"]")
+				print(unlikeChilds)
+				if len(unlikeChilds) > 0:
+					continue
+
 				# scroll element into the middle of page
 				driver.execute_script("window.scrollBy(0, arguments[0]);", driver.execute_script("return arguments[0].getBoundingClientRect().top;", hearts[a]) - windowHeight / 2)
 
