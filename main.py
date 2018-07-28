@@ -54,6 +54,9 @@ component = {"fb": components.manageFacebook,
 for key in component:
 	if key in params["component"]:
 		logger.info("INFO: running " + key)
-		component[key](params, logger)
-		logger.info("SUCCESS: finished " + key)
+		try:
+			component[key](params, logger)
+			logger.info("SUCCESS: finished " + key)
+		except:
+			logger.info("FAILURE")
 logger.info("SUCCESS: finished")
