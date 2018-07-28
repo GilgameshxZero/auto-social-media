@@ -1,7 +1,3 @@
-.vs
+*.confidential.*
 
-AutoSoc/Credentials.txt
-AutoSoc/DebugLog.txt
-AutoSoc/debug.log
-*.suo
-*.pyc
+chromedriver.exe
