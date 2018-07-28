@@ -8,7 +8,7 @@ try:
 	f = open("config.ini", "r")
 except FileNotFoundError:
 	input("ERROR: configuration file not found")
-	return
+	exit()
 params = {}
 for line in f:
 	if len(line.strip()) == 0:
@@ -21,7 +21,7 @@ try:
 	f = open(params["credentials"], "r")
 except FileNotFoundError:
 	input("ERROR: " + params["credentials"] + " configuration file not found")
-	return
+	exit()
 for line in f:
 	if len(line.strip()) == 0:
 		continue
@@ -30,11 +30,12 @@ for line in f:
 f.close()
 
 print("SUCCESS: done reading configuration file")
+print(params)
 
 # set up logging
 logger = logging.getLogger("log")
 logger.setLevel(logging.DEBUG)
-file_log_handler = logging.FileHandler(params["logfile"], mode = "wa")
+file_log_handler = logging.FileHandler(params["logfile"], mode = "a")
 stream_log_handler = logging.StreamHandler()
 file_log_handler.setLevel(logging.DEBUG)
 stream_log_handler.setLevel(logging.DEBUG)
@@ -46,7 +47,7 @@ stream_log_handler.setFormatter(formatter)
 
 # run components
 logger.info("INFO: running components")
-component = {"fb": components.likeFB, 
+component = {"fb": components.manageFacebook, 
 			"insta": components.heartInsta}
 for key in component:
 	if key in params["component"]:

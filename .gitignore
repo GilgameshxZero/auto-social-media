@@ -1,3 +1,2 @@
 *.confidential.*
-
-chromedriver.exe
+*.pyc

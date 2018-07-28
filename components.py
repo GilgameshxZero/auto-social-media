@@ -23,29 +23,29 @@ def ReactElement(driver, element, react, reacthoverwait):
 	# get element of correct reaction and perform
 	actions = selenium.webdriver.common.action_chains.ActionChains(driver)
 	reactbutton = None
-	toolbarparlist = driver.find_elements_by_css_selector("div[aria-label="Reactions"]")
+	toolbarparlist = driver.find_elements_by_css_selector("div[aria-label=\"Reactions\"]")
 	toolbarpar = toolbarparlist[-1]
 	for a in range(len(toolbarparlist)):
 		if toolbarparlist[a].is_displayed():
 			toolbarpar = toolbarparlist[a]
 			break
 	if react == "like":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Like"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Like\"]")
 	elif react == "angry":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Angry"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Angry\"]")
 	elif react == "love":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Love"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Love\"]")
 	elif react == "sad":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Sad"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Sad\"]")
 	elif react == "haha":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Haha"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Haha\"]")
 	elif react == "wow":
-		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label="Wow"]")
+		reactbutton = toolbarpar.find_element_by_css_selector("span[aria-label=\"Wow\"]")
 	actions.click(reactbutton)
 	actions.perform()
 		
 # autolike fb posts based on parameters
-def likeFB (params, logger):
+def manageFacebook (params, logger):
 	# inititialize parameters
 	pageloadwait = float(params["fb-pageloadwait"])
 	scrollwait = float(params["fb-scrollwait"])
@@ -61,16 +61,16 @@ def likeFB (params, logger):
 	logger.info("INFO: logging in")
 
 	chrome_options = Options()
-	chrome_options.add_argument("--disable-notifications")
+	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
 	driver = webdriver.Chrome(params["chromedrloc"], chrome_options=chrome_options)
+	driver.implicitly_wait(0) #blocks for pages to load completely before
+
 	driver.get("https://www.facebook.com/login.php")
-	time.sleep(pageloadwait)
 	driver.find_element_by_id("email").send_keys(params["fb-username"])
 	driver.find_element_by_id("pass").send_keys(params["fb-password"])
 	driver.find_element_by_id("loginbutton").click()
-	time.sleep(pageloadwait)
 
 	logger.info("SUCCESS: login success")
 
@@ -79,13 +79,13 @@ def likeFB (params, logger):
 
 	reacts = 0
 	curheight = 0
-	windowheight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
+	windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
 	while reacts < int(params["fb-feedreactlimit"]):
 		driver.execute_script("window.scrollTo(0, arguments[0]);", curheight)
 		time.sleep(scrollwait)
-		curheight += windowheight
+		curheight += windowHeight
 
-		buttons = driver.find_elements_by_css_selector("a[data-testid="fb-ufi-likelink"]")
+		buttons = driver.find_elements_by_css_selector("a[data-testid=\"fb-ufi-likelink\"]")
 		for a in range(len(buttons)):
 			if buttons[a].is_displayed():
 				ReactElement(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
@@ -100,13 +100,13 @@ def likeFB (params, logger):
 
 	if params["fb-friendprofiles"] == "All":
 		driver.get("https://www.facebook.com/me")
-		friendsurl = driver.find_element_by_css_selector("a[data-tab-key="friends"]").get_attribute("href")
+		friendsurl = driver.find_element_by_css_selector("a[data-tab-key=\"friends\"]").get_attribute("href")
 		time.sleep(pageloadwait)
 		driver.get(friendsurl)
 		time.sleep(pageloadwait)
 
 		rain.seleniumFullScroll(driver, pausetime=scrollwait)
-		friends = driver.find_elements_by_css_selector("div[class="uiProfileBlockContent"]")
+		friends = driver.find_elements_by_css_selector("div[class=\"uiProfileBlockContent\"]")
 		for a in range(len(friends)):
 			frlinks.append(friends[a].find_element_by_tag_name("a").get_attribute("href"))
 		logger.info("INFO: found " + str(len(frlinks)) + " friends from friends list")
@@ -124,13 +124,13 @@ def likeFB (params, logger):
 
 		reacts = 0
 		curheight = 0
-		windowheight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
+		windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
 		while reacts < int(params["fb-friendreactlimit"]):
 			driver.execute_script("window.scrollTo(0, arguments[0]);", curheight)
 			time.sleep(scrollwait)
-			curheight += windowheight
+			curheight += windowHeight
 
-			buttons = driver.find_elements_by_css_selector("a[data-testid="fb-ufi-likelink"]")
+			buttons = driver.find_elements_by_css_selector("a[data-testid=\"fb-ufi-likelink\"]")
 			for a in range(len(buttons)):
 				if buttons[a].is_displayed():
 					ReactElement(driver, buttons[a], params["fb-react"], params["fb-reacthoverwait"])
@@ -168,7 +168,7 @@ def heartInsta (params, logger):
 	time.sleep(pageloadwait)
 	driver.find_element_by_name("username").send_keys(params["insta-username"])
 	driver.find_element_by_name("password").send_keys(params["insta-password"])
-	driver.find_element_by_xpath("//button[text()="Log in"]").click()
+	driver.find_element_by_xpath("//button[text()=\"Log in\"]").click()
 	time.sleep(pageloadwait)
 
 	logger.info("SUCCESS: login success")
@@ -179,11 +179,11 @@ def heartInsta (params, logger):
 	curheight = 0
 	totalhearts = 0
 	nohearts = 0
-	windowheight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
+	windowHeight = driver.execute_script("return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight")
 	while nohearts <= int(params["insta-noheartlimit"]):
 		driver.execute_script("window.scrollTo(0, arguments[0]);", curheight)
 		time.sleep(scrollwait)
-		curheight += windowheight
+		curheight += windowHeight
 		hearts = driver.find_elements_by_class_name("coreSpriteHeartOpen")
 
 		if len(hearts) == 0:
@@ -194,7 +194,7 @@ def heartInsta (params, logger):
 		for a in range(len(hearts)):
 			if hearts[a].is_displayed():
 				# scroll element into the middle of page
-				driver.execute_script("window.scrollBy(0, arguments[0]);", driver.execute_script("return arguments[0].getBoundingClientRect().top;", hearts[a]) - windowheight / 2)
+				driver.execute_script("window.scrollBy(0, arguments[0]);", driver.execute_script("return arguments[0].getBoundingClientRect().top;", hearts[a]) - windowHeight / 2)
 
 				hearts[a].click()
 				totalhearts += 1
