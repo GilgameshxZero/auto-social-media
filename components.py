@@ -145,7 +145,7 @@ def manageFacebook (params, logger):
 	driver.get("https://www.facebook.com/me") # give window time to close
 	driver.close()
 
-# autolike instafeM posts based on parameters
+# autolike instagram posts based on parameters
 def manageInsta (params, logger):
 	# inititialize parameters
 	pageloadwait = float(params["insta-pageloadwait"])
@@ -185,10 +185,7 @@ def manageInsta (params, logger):
 
 		hearts = driver.find_elements_by_class_name("coreSpriteHeartOpen")
 
-		if len(hearts) == 0:
-			nohearts += 1
-		else:
-			nohearts = 0
+		clicked = False
 
 		for a in range(len(hearts)):
 			if hearts[a].is_displayed():
@@ -204,7 +201,13 @@ def manageInsta (params, logger):
 				hearts[a].click()
 				totalhearts += 1
 				logger.info("SUCCESS: " + str(totalhearts) + " hearts")
+				clicked = True
 				time.sleep(heartcooldown)
+
+		if clicked:
+			nohearts = 0
+		else:
+			nohearts += 1
 			
 	logger.info("INFO: no more hearts found")
 
