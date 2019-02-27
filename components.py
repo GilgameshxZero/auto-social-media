@@ -167,7 +167,7 @@ def manageInsta (params, logger):
 	time.sleep(pageloadwait)
 	driver.find_element_by_name("username").send_keys(params["insta-username"])
 	driver.find_element_by_name("password").send_keys(params["insta-password"])
-	driver.find_element_by_xpath("//button[text()=\"Log in\"]").click()
+	driver.find_element_by_xpath("//button[contains(.//div, \"Log in\")]").click()
 
 	logger.info("SUCCESS: login success")
 

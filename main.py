@@ -32,7 +32,6 @@ for line in f:
 f.close()
 
 print("SUCCESS: done reading configuration file")
-print(params)
 
 # set up logging
 logger = logging.getLogger("log")
