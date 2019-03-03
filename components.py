@@ -54,7 +54,7 @@ def manageFacebook (params, logger):
 	logger.info("INFO: logging in")
 
 	chrome_options = Options()
-	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
+	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent --disable-gpu --allow-insecure-localhost")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
 	driver = webdriver.Chrome(rain.toRelPath(params["chromedrloc"]), chrome_options=chrome_options)
@@ -156,7 +156,7 @@ def manageInsta (params, logger):
 	logger.info("INFO: logging in")
 
 	chrome_options = Options()
-	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent")
+	chrome_options.add_argument("--disable-notifications --mute-audio --log-level=3 --silent --disable-gpu --allow-insecure-localhost")
 	if params["hideBrowser"] == "yes":
 		chrome_options.add_argument("--headless")
 	driver = webdriver.Chrome(rain.toRelPath(params["chromedrloc"]), chrome_options=chrome_options)
